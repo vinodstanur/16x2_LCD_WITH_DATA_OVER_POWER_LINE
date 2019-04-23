@@ -10,6 +10,7 @@ void setup() {
 }
 
 void setData(uint8_t d) {
+  //not optimized. But it is okay.
   digitalWrite(5, 0);
   digitalWrite(4, 0);
   digitalWrite(3, 0);
@@ -39,13 +40,13 @@ void loop() {
   if (Serial.available()) {
     uint8_t a = Serial.read();
     //Serial.write(a);
-    if ((a & 0xF0) == 0xA0) {
+    if ((a & 0xF0) == 0xA0) { //MS nibble A means LS nibble is 4 bit data
       setData(a & 0xf);
-    } else if ((a & 0xF0) == 0xB0) {
+    } else if ((a & 0xF0) == 0xB0) {//MS nibble B means LSBit is RS
       setRS(a & 0xf);
-    } else if ((a & 0xF0) == 0xC0) {
+    } else if ((a & 0xF0) == 0xC0) {//MS nibble C means LSBit is EN
       setEN(a & 0xf);
-    } else if ((a & 0xF0) == 0xD0) {
+    } else if ((a & 0xF0) == 0xD0) {//MS nibble D means LS nibble is led brightness. MAX 15, min 0
       setLED(a & 0xf);
     }
   }
